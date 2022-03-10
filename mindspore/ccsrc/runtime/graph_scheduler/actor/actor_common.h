@@ -133,6 +133,7 @@ class ActorDispatcher {
  public:
   template <typename T, typename Arg0, typename Arg1>
   static void Send(const AID &aid, void (T::*method)(Arg0), Arg1 &&arg) {
+    is_multi_thread_execution_ = false;
     if (is_multi_thread_execution_) {
       Async(aid, method, arg);
     } else {
@@ -148,6 +149,7 @@ class ActorDispatcher {
 
   template <typename T, typename... Args0, typename... Args1>
   static void Send(const AID &aid, void (T::*method)(Args0...), Args1 &&... args) {
+    is_multi_thread_execution_ = false;
     if (is_multi_thread_execution_) {
       auto tuple = std::make_tuple(std::forward<Args1>(args)...);
       Async(aid, method, std::move(tuple));
