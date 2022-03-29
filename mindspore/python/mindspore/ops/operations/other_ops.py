@@ -975,3 +975,28 @@ class PyFunc(PrimitiveWithInfer):
         logger.warning("The function output are empty tuple. Add a placeholder instead. "
                        "Do not use it as it could be any uninitialized data.")
         return (mstype.int32,)
+
+class StartTimer(PrimitiveWithInfer):
+
+    @prim_attr_register
+    def __init__(self):
+        self.init_prim_io_names(inputs=['x'], outputs=['y'])
+
+    #def __call__(self, x):
+    def __infer__(self, x):
+        return x
+
+class ElapTimer(PrimitiveWithInfer):
+
+    @prim_attr_register
+    def __init__(self):
+        self.init_prim_io_names(inputs=['x'], outputs=['y'])
+
+    #def __call__(self, x):
+    def __infer__(self, x):
+        dst_type = mstype.float32
+        src_type = x['dtype']
+        self.add_prim_attr('DstT', dst_type)
+        self.add_prim_attr('SrcT', src_type)
+        self.add_prim_attr('dst_type', dst_type)
+        return x
